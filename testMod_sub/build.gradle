@@ -7,5 +7,10 @@ loom {
 }
 
 dependencies {
+  // if the jar does not exist in /testMod/build/libs the gradle project will completely fail to load
+  // changing this to `implementation` generates the jar in libs but crashes at runtime because
+  // `modImplementation` does additional required things
+  // changing back to `modImplementation` after building once makes everything work, but i suspect
+  // this causes an old jar to be used as `testMod_sub` is built before `testMod`
   modImplementation project(":testMod")
 }
