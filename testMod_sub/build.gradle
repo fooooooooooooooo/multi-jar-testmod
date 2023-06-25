@@ -1,0 +1,11 @@
+archivesBaseName = "testmod-sub"
+
+loom {
+  runConfigs.configureEach {
+    ideConfigGenerated = true
+  }
+}
+
+dependencies {
+  modImplementation project(":testMod")
+}

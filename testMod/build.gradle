@@ -1,0 +1,7 @@
+archivesBaseName = "testmod"
+
+loom {
+  runConfigs.configureEach {
+    ideConfigGenerated = true
+  }
+}

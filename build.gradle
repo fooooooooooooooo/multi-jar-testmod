@@ -1,0 +1,71 @@
+plugins {
+  id 'fabric-loom' version '1.2-SNAPSHOT'
+}
+
+loom {
+  runConfigs.configureEach {
+    ideConfigGenerated = true
+  }
+}
+
+allprojects {
+  apply plugin: 'fabric-loom'
+
+  version = project.mod_version
+  group = project.maven_group
+
+  tasks.withType(GenerateModuleMetadata).configureEach {
+    it.enabled = false
+  }
+
+  tasks.withType(JavaCompile).configureEach {
+    it.options.release = 17
+    it.options.encoding = "UTF-8"
+  }
+
+  repositories {
+    // todo
+  }
+
+  dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+  }
+
+  processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+      expand "version": project.version
+    }
+  }
+}
+
+archivesBaseName = "testmod-api"
+
+dependencies {
+  minecraft "com.mojang:minecraft:${project.minecraft_version}"
+  mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+  modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+  modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+tasks.register('copyFiles', Copy) {
+  dependsOn subprojects.remapJar
+  from(subprojects.remapJar)
+  into project.file('output')
+}
+
+build {
+  finalizedBy(copyFiles)
+}
+
+subprojects {
+  dependencies {
+    implementation(project(path: ":", configuration: "namedElements")) {
+      exclude group: "net.fabricmc", module: "fabric-loader"
+    }
+  }
+}
