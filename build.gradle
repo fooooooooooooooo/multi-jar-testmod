@@ -1,18 +1,23 @@
 plugins {
-  id 'fabric-loom' version '1.2-SNAPSHOT'
+  id 'fabric-loom' version '1.2-SNAPSHOT' apply false
+  id 'org.barfuin.gradle.taskinfo' version '2.1.0'
 }
 
-loom {
-  runConfigs.configureEach {
-    ideConfigGenerated = true
-  }
-}
+apply plugin: 'base'
 
-allprojects {
+var outputDir = project.layout.projectDirectory.dir("build/libs")
+
+subprojects {
   apply plugin: 'fabric-loom'
 
   version = project.mod_version
   group = project.maven_group
+
+  loom {
+    runConfigs.configureEach {
+      ideConfigGenerated = true
+    }
+  }
 
   tasks.withType(GenerateModuleMetadata).configureEach {
     it.enabled = false
@@ -23,13 +28,25 @@ allprojects {
     it.options.encoding = "UTF-8"
   }
 
-  repositories {
-    // todo
+  java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+  }
+
+  jar {
+    from("LICENSE") {
+      rename { "${it}_$project.archivesBaseName" }
+    }
+  }
+
+  remapJar {
+    destinationDirectory = outputDir
   }
 
   dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
   }
@@ -43,29 +60,6 @@ allprojects {
   }
 }
 
-archivesBaseName = "testmod-api"
-
-dependencies {
-  minecraft "com.mojang:minecraft:${project.minecraft_version}"
-  mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-  modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-  modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-}
-
-tasks.register('copyFiles', Copy) {
-  dependsOn subprojects.remapJar
-  from(subprojects.remapJar)
-  into project.file('output')
-}
-
-build {
-  finalizedBy(copyFiles)
-}
-
-subprojects {
-  dependencies {
-    implementation(project(path: ":", configuration: "namedElements")) {
-      exclude group: "net.fabricmc", module: "fabric-loader"
-    }
-  }
+clean.doFirst {
+  delete "${rootDir}/build/"
 }

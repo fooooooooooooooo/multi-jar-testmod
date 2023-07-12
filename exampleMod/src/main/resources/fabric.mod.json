@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "testmod",
+  "id": "examplemod",
   "version": "${version}",
-  "name": "TestMod",
+  "name": "ExampleMod",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": ["Me!"],
   "contact": {
@@ -10,10 +10,10 @@
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
   "license": "CC0-1.0",
-  "icon": "assets/testmod/icon.png",
+  "icon": "assets/examplemod/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": ["com.example.testmod.TestMod"]
+    "main": ["com.example.examplemod.ExampleMod"]
   },
   "depends": {
     "fabricloader": ">=0.14.21",

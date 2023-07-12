@@ -1,13 +1,17 @@
 pluginManagement {
-    repositories {
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
-        mavenCentral()
-        gradlePluginPortal()
+  repositories {
+    maven {
+      name = 'Fabric'
+      url = 'https://maven.fabricmc.net/'
     }
+    mavenCentral()
+    gradlePluginPortal()
+  }
 }
 
-include("testMod")
-include("testMod_sub")
+rootProject.name = 'exampleMod'
+
+include('api')
+include('exampleMod')
+include('exampleMod_sub')
+include('testmod')

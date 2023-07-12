@@ -1,0 +1,9 @@
+archivesBaseName = project.archives_base_name
+
+dependencies {
+//  include project(path: ':api', configuration: 'namedElements')
+  compileOnly project(path: ':api', configuration: 'namedElements')
+
+  // maybe possibly perhaps needed i dont know
+  // exclude group: 'net.fabricmc', module: 'fabric-loader'
+}

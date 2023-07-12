@@ -1,0 +1,22 @@
+archivesBaseName = "$project.archives_base_name-testmod"
+
+repositories {
+  maven {
+    name = 'TerraformersMC'
+    url = 'https://maven.terraformersmc.com/'
+  }
+}
+
+dependencies {
+  compileOnly project(path: ':api', configuration: 'namedElements')
+  implementation project(path: ':exampleMod', configuration: 'namedElements')
+  implementation project(path: ':exampleMod_sub', configuration: 'namedElements')
+
+  modImplementation "com.terraformersmc:modmenu:$project.modmenu_version"
+}
+
+build {
+  dependsOn ':api:build'
+  dependsOn ':exampleMod:build'
+  dependsOn ':exampleMod_sub:build'
+}
